@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PageDefault from '../../../components/PageDefault';
 import FormField from '../../../components/FormField';
 import Button from '../../../components/Button';
+import useForm from '../../../hooks/useForm';
 
 function CadastroCategoria() {
   const [categorias, setCategorias] = useState([]);
@@ -12,24 +13,11 @@ function CadastroCategoria() {
     descricao: '',
     cor: '',
   };
-  const [values, setValues] = useState(valoresIniciais);
 
-  function setValue(key, value) {
-    setValues({
-      ...values,
-      [key]: value,
-    });
-  }
-
-  function handleChange(e) {
-    setValue(
-      e.target.getAttribute('name'),
-      e.target.value,
-    );
-  }
+  const { values, handleChange, clearForm } = useForm(valoresIniciais);
 
   useEffect(() => {
-    const URL = 'http://localhost:8080/categorias';
+    const URL = 'https://imersaoreact-aluraflix.herokuapp.com/categorias';
     fetch(URL)
       .then(async (res) => {
         const data = await res.json();
@@ -50,7 +38,7 @@ function CadastroCategoria() {
         e.preventDefault();
         setCategorias([...categorias, values]);
 
-        setValues(valoresIniciais);
+        clearForm(valoresIniciais);
       }}
       >
         <FormField
@@ -89,8 +77,8 @@ function CadastroCategoria() {
 
       <ul>
         {categorias.map((categoria) => (
-          <li key={`${categoria.nome}`}>
-            {categoria.nome}
+          <li key={`${categoria.titulo}`}>
+            {categoria.titulo}
           </li>
         ))}
       </ul>
